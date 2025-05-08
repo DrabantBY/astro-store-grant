@@ -1,0 +1,120 @@
+---
+import CloseSvg from "@svg/close.svg";
+
+import logo from "@svg/logo.svg?raw";
+import search from "@svg/search.svg?raw";
+import favorites from "@svg/favorites.svg?raw";
+
+import AccountSvg from "@svg/account.svg";
+import CartSvg from "@svg/cart.svg";
+
+const { id } = Astro.props;
+
+const links = [
+  {
+    icon: search,
+    href: "/search",
+  },
+
+  {
+    icon: logo,
+    href: "/",
+  },
+
+  {
+    icon: favorites,
+    href: "/favorites",
+  },
+];
+---
+
+<dialog id={id} class="mobile-menu">
+  <header class="mobile-menu__header">
+    <button type="button" class="mobile-menu__close" onclick="menu.close()">
+      <CloseSvg />
+    </button>
+    <nav class="mobile-menu__nav">
+      <ul class="mobile-menu__list">
+        {
+          links.map(({ icon, href }) => (
+            <li class="mobile-menu__item">
+              <a
+                class:list={[
+                  "mobile-menu__link",
+                  { "mobile-menu__logo": href === "/" },
+                ]}
+                href={href}
+              >
+                <Fragment set:html={icon} />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <button type="button" class="header__popover">
+      <AccountSvg />
+    </button>
+    <button type="button" class="header__popover">
+      <CartSvg />
+    </button>
+  </header>
+
+  <slot />
+</dialog>
+
+<style lang="scss">
+  @use "../styles/variables" as vars;
+
+  .mobile-menu {
+    block-size: 100vh;
+    max-block-size: 100vh;
+    inline-size: 100%;
+    max-inline-size: 100%;
+    padding-inline: 2rem;
+    color: vars.$clr-white;
+    background-color: vars.$clr-dark;
+    transform: translateX(-100%);
+    transition-behavior: allow-discrete;
+    transition:
+      transform 0.2s,
+      display 0.2s;
+
+    &::backdrop {
+      background-color: transparent;
+    }
+
+    &[open] {
+      transform: translateX(0);
+
+      @starting-style {
+        transform: translateX(-100%);
+      }
+    }
+
+    &__header {
+      block-size: 8rem;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    &__list {
+      justify-content: space-between;
+    }
+
+    :where(&__nav, &__list) {
+      flex-grow: 1;
+    }
+
+    :where(&__link, &__close):hover {
+      color: vars.$clr-disable;
+    }
+
+    :where(&__list, &__link, &__close) {
+      display: flex;
+      align-items: center;
+    }
+  }
+</style>

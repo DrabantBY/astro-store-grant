@@ -1,0 +1,129 @@
+---
+import ArrowSvg from "@svg/arrow.svg";
+
+const links = [
+  {
+    list: [
+      { label: "Показать все товары", href: "/catalog" },
+      { label: "Кольца", href: "/rings" },
+      { label: "Обручальные кольца", href: "/wedding rings" },
+      { label: "Серьги", href: "/earrings" },
+      { label: "Пуссеты", href: "/studs" },
+      { label: "Подвески", href: "/necklaces" },
+      { label: "Кресты", href: "/crosses" },
+    ],
+    label: "Каталог",
+    href: "",
+  },
+
+  {
+    list: [],
+    label: "Акции",
+    href: "/stocks",
+  },
+
+  {
+    list: [
+      { label: "Neon", href: "/neon" },
+      { label: "Eclipse", href: "/eclipse" },
+    ],
+    label: "Коллекции",
+    href: "",
+  },
+
+  {
+    list: [],
+    label: "Доставка и оплата",
+    href: "/delivery",
+  },
+
+  {
+    list: [],
+    label: "О нас",
+    href: "/about",
+  },
+];
+---
+
+<nav class="mobile-menu__nav">
+  <ul class="mobile-menu__list">
+    {
+      links.map(({ label, href, list }) =>
+        href ? (
+          <li class="mobile-menu__item">
+            <a class="mobile-menu__link" href={href}>
+              {label}
+            </a>
+          </li>
+        ) : (
+          <details>
+            <summary class="mobile-menu__title">
+              {label}
+              <ArrowSvg />
+            </summary>
+            <ul class="mobile-menu__sublist">
+              {list.map(({ label, href }) => (
+                <li class="mobile-menu__item">
+                  <a class="mobile-menu__link" href={href}>
+                    {label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </details>
+        ),
+      )
+    }
+  </ul>
+</nav>
+
+<style lang="scss">
+  @use "../styles/variables" as vars;
+
+  .mobile-menu {
+    &__sublist {
+      margin-inline-start: 4rem;
+    }
+
+    &__link {
+      display: block;
+    }
+
+    &__link,
+    &__title {
+      padding-block: 1.5rem;
+      border-bottom: 1px solid currentColor;
+
+      &:hover {
+        color: vars.$clr-disable;
+      }
+    }
+
+    &__title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+
+      svg {
+        transform: rotate(-90deg);
+        transition: transform 0.1s linear;
+      }
+    }
+
+    details[open] &__title {
+      text-decoration: underline;
+      text-underline-offset: 1.8rem;
+      text-decoration-thickness: 1px;
+      border-bottom-color: transparent;
+
+      &:hover {
+        color: vars.$clr-white;
+      }
+
+      svg {
+        transform: rotate(0);
+      }
+    }
+  }
+</style>
