@@ -1,6 +1,7 @@
 ---
 import MobileMenu from "./MobileMenu.astro";
 import MobileLinks from "./MobileLinks.astro";
+import ModalLayout from "@layouts/ModalLayout.astro";
 
 import MenuSvg from "@svg/menu.svg";
 import AccountSvg from "@svg/account.svg";
@@ -16,6 +17,8 @@ const links = [
     icon: search,
     href: "/search",
     isHidden: false,
+    isLogo: false,
+
   },
 
   {
@@ -24,48 +27,60 @@ const links = [
     href: "/",
     isLogo: true,
     isHidden: false,
+
   },
 
   {
     label: "Каталог",
     icon: "",
     href: "/catalog",
+    isLogo: false,
     isHidden: true,
+
   },
 
   {
     label: "Акции",
     icon: "",
     href: "/stocks",
+    isLogo: false,
     isHidden: true,
+
   },
 
   {
     label: "Коллекции",
     icon: "",
     href: "/collections",
-    isHidden: true,
+    isLogo: false,
+    isHidden: true,count: 0
   },
 
   {
     label: "Доставка и оплата",
     icon: "",
     href: "/delivery",
+    isLogo: false,
     isHidden: true,
+
   },
 
   {
     label: "О нас",
     icon: "",
     href: "/about",
+    isLogo: false,
     isHidden: true,
+
   },
 
   {
     label: "",
     icon: favorites,
     href: "/favorites",
+    isLogo: false,
     isHidden: false,
+    'data-count': 2
   },
 ];
 ---
@@ -73,7 +88,7 @@ const links = [
 <header id="header" class="header">
   <div class="header__container">
     <nav class="header__nav">
-      <button type="button" class="header__menu" onclick="menu.showModal()">
+      <button type="button" class="header__modal" onclick="menu.showModal()">
         <MenuSvg />
       </button>
 
@@ -82,11 +97,12 @@ const links = [
       </MobileMenu>
       <ul class="header__list">
         {
-          links.map(({ label, icon, href, isLogo, isHidden }) => (
+          links.map(({ label, icon, isLogo, isHidden, ...other }) => (
             <li class="header__item" hidden={isHidden}>
               <a
                 class:list={["header__link", { header__logo: isLogo }]}
-                href={href}
+                target="_blank"
+                {...other}
               >
                 {label || <Fragment set:html={icon} />}
               </a>
@@ -96,17 +112,27 @@ const links = [
       </ul>
     </nav>
 
-    <button type="button" class="header__popover">
+    <button type="button" class="header__modal" >
       <AccountSvg />
     </button>
-    <button type="button" class="header__popover">
+
+
+    <button type="button" class="header__modal" data-count="2" onclick="cart.showModal()">
       <CartSvg />
     </button>
+    <ModalLayout
+      id="cart"
+      title="ваша корзина пока пуста"
+      link={{ label: "выбрать товары", href: "#" }}
+    >
+      Корзина ждет, что ее наполнят. Желаем приятных покупок!
+    </ModalLayout>
   </div>
 </header>
 
 <style is:global lang="scss">
   @use "../styles/variables" as vars;
+  @use "../styles/mixins" as mixins;
 
   .header {
     block-size: 8rem;
@@ -117,7 +143,19 @@ const links = [
       order: -1;
     }
 
-    :where(&__container, &__nav, &__list, &__link, &__menu) {
+    &__link[data-count]::after {
+      background-color: vars.$clr-active;
+    }
+
+    &__modal[data-count]::after {
+      background-color: vars.$clr-black;
+    }
+
+    &__link[data-count], &__modal[data-count] {
+      @include mixins.amount-badge(vars.$clr-white)
+    }
+
+    :where(&__container, &__nav, &__list, &__link, &__modal) {
       display: flex;
       align-items: center;
     }
@@ -134,14 +172,14 @@ const links = [
       flex-grow: 1;
     }
 
-    :where(&__link, &__menu):hover {
+    :where(&__link, &__modal):hover {
       color: vars.$clr-hover;
     }
 
     @media (min-width: vars.$md) {
       block-size: 12rem;
 
-      &__menu {
+      &__modal:first-child {
         display: none;
       }
 
@@ -168,9 +206,14 @@ const links = [
         height: 8rem;
       }
 
-      :where(&__link:not(&__logo), &__menu) svg {
+      :where(&__link:not(&__logo), &__modal) svg {
         width: 2.6rem;
         height: 2.6rem;
+      }
+
+      :is(&__link, &__modal)[data-count]::after {
+        inset-inline-end: -3px;
+        inset-block-start: -6px;
       }
     }
   }

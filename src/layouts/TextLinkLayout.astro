@@ -1,0 +1,29 @@
+---
+const { label, href, className } = Astro.props;
+---
+
+<a class:list={[className, "text-link"]} href={href} target="_blank">
+  {label}
+</a>
+
+<style lang="scss">
+  @use "../styles/variables" as vars;
+
+  .text-link {
+    display: block;
+    block-size: 6rem;
+    align-content: center;
+    text-align: center;
+    color: vars.$clr-white;
+    background-color: vars.$clr-black;
+
+    &:hover {
+      background-color: vars.$clr-dark;
+    }
+
+    &::first-letter {
+      text-transform: uppercase;
+    }
+
+  }
+</style>

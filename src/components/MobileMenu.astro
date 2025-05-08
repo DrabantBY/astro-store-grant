@@ -1,12 +1,11 @@
 ---
-import CloseSvg from "@svg/close.svg";
+import CloseBtnLayout from "@layouts/CloseBtnLayout.astro";
+import AccountSvg from "@svg/account.svg";
+import CartSvg from "@svg/cart.svg";
 
 import logo from "@svg/logo.svg?raw";
 import search from "@svg/search.svg?raw";
 import favorites from "@svg/favorites.svg?raw";
-
-import AccountSvg from "@svg/account.svg";
-import CartSvg from "@svg/cart.svg";
 
 const { id } = Astro.props;
 
@@ -24,26 +23,26 @@ const links = [
   {
     icon: favorites,
     href: "/favorites",
+    'data-count': 2
   },
 ];
 ---
 
 <dialog id={id} class="mobile-menu">
   <header class="mobile-menu__header">
-    <button type="button" class="mobile-menu__close" onclick="menu.close()">
-      <CloseSvg />
-    </button>
+    <CloseBtnLayout onclick="menu.close()" />
     <nav class="mobile-menu__nav">
       <ul class="mobile-menu__list">
         {
-          links.map(({ icon, href }) => (
+          links.map(({ icon, ...other }) => (
             <li class="mobile-menu__item">
               <a
                 class:list={[
                   "mobile-menu__link",
-                  { "mobile-menu__logo": href === "/" },
+                  { "mobile-menu__logo": other.href === "/" },
                 ]}
-                href={href}
+                target="_blank"
+                {...other}
               >
                 <Fragment set:html={icon} />
               </a>
@@ -53,33 +52,38 @@ const links = [
       </ul>
     </nav>
 
-    <button type="button" class="header__popover">
+    <button type="button" class="mobile-menu__modal">
       <AccountSvg />
     </button>
-    <button type="button" class="header__popover">
+    <button type="button" class="mobile-menu__modal" onclick="cart.showModal()" data-count="2">
       <CartSvg />
     </button>
   </header>
-
+<main class="mobile-menu__main">
   <slot />
+</main>
 </dialog>
 
 <style lang="scss">
   @use "../styles/variables" as vars;
+  @use "../styles/mixins" as mixins;
+
 
   .mobile-menu {
     block-size: 100vh;
     max-block-size: 100vh;
     inline-size: 100%;
     max-inline-size: 100%;
-    padding-inline: 2rem;
+    padding-inline: vars.$padding;
     color: vars.$clr-white;
     background-color: vars.$clr-dark;
     transform: translateX(-100%);
-    transition-behavior: allow-discrete;
     transition:
       transform 0.2s,
-      display 0.2s;
+      display 0.2s,
+      overlay 0.2s;
+
+    transition-behavior: allow-discrete;
 
     &::backdrop {
       background-color: transparent;
@@ -104,15 +108,27 @@ const links = [
       justify-content: space-between;
     }
 
+    &__link[data-count]::after {
+      background-color: vars.$clr-active;
+    }
+
+    &__modal[data-count]::after {
+      background-color: vars.$clr-black;
+    }
+
+    &__link[data-count], &__modal[data-count] {
+      @include mixins.amount-badge(vars.$clr-white)
+    }
+
+    :where(&__link, &__modal):hover {
+      color: vars.$clr-disable;
+    }
+
     :where(&__nav, &__list) {
       flex-grow: 1;
     }
 
-    :where(&__link, &__close):hover {
-      color: vars.$clr-disable;
-    }
-
-    :where(&__list, &__link, &__close) {
+    :where(&__list, &__link, &__modal) {
       display: flex;
       align-items: center;
     }

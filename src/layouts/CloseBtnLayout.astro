@@ -1,0 +1,23 @@
+---
+import CloseSvg from "@svg/close.svg";
+
+const { className, onclick } = Astro.props;
+---
+
+<button type="button" class:list={[className, "close"]} onclick={onclick}>
+  <CloseSvg />
+</button>
+
+<style lang="scss">
+  @use "../styles/variables" as vars;
+
+  .close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      color: vars.$clr-hover;
+    }
+  }
+</style>

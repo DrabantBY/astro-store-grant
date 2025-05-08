@@ -1,0 +1,64 @@
+---
+import CloseBtnLayout from "./CloseBtnLayout.astro";
+import TextLinkLayout from "./TextLinkLayout.astro";
+
+const { id, title, link } = Astro.props;
+---
+
+<dialog class="modal" id={id}>
+  <header class="modal__header">
+    <h2 class="modal__title">
+      {title}
+    </h2>
+    <CloseBtnLayout onclick=`${id}.close()` />
+  </header>
+
+  <main class="modal__main">
+    <slot />
+  </main>
+
+  <footer class="modal__footer">
+    <TextLinkLayout {...link} />
+  </footer>
+</dialog>
+
+<style lang="scss">
+  @use "../styles/variables" as vars;
+
+  .modal {
+    max-inline-size: 100rem;
+    min-inline-size: 33.5rem;
+    padding-inline: 1.6rem;
+    padding-block: 1.6rem;
+    inset-inline-start: 50%;
+    inset-block-start: 8rem;
+    transform: translateX(-50%);
+    font-size: 1.6rem;
+
+    &__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    &__title {
+      text-transform: uppercase;
+    }
+
+    &__main {
+      margin-block-start: 6.5rem;
+      margin-block-end: 5rem;
+    }
+
+    @media screen and (min-width: vars.$md) {
+      padding-inline: 3.5rem;
+      padding-block: 3.5rem;
+      inset-block-start: 12rem;
+
+      &__main {
+        margin-block-start: 5rem;
+        margin-block-end: 3.5rem;
+      }
+    }
+  }
+</style>

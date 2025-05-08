@@ -1,0 +1,23 @@
+@mixin amount-badge($color) {
+  position: relative;
+
+  &::after {
+    font-size: 1.2rem;
+    display: block;
+    align-content: center;
+    text-align: center;
+    content: attr(data-count);
+    position: absolute;
+    block-size: 20px;
+    inline-size: 20px;
+    inset-inline-end: 0;
+    inset-block-start: -14px;
+    color: $color;
+    border-radius: 50%;
+    transform: translateX(50%);
+  }
+
+  &[data-count="0"]::after {
+    display: none;
+  }
+}
