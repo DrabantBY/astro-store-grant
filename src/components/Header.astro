@@ -1,0 +1,177 @@
+---
+import MobileMenu from "./MobileMenu.astro";
+import MobileLinks from "./MobileLinks.astro";
+
+import MenuSvg from "@svg/menu.svg";
+import AccountSvg from "@svg/account.svg";
+import CartSvg from "@svg/cart.svg";
+
+import logo from "@svg/logo.svg?raw";
+import search from "@svg/search.svg?raw";
+import favorites from "@svg/favorites.svg?raw";
+
+const links = [
+  {
+    label: "",
+    icon: search,
+    href: "/search",
+    isHidden: false,
+  },
+
+  {
+    label: "",
+    icon: logo,
+    href: "/",
+    isLogo: true,
+    isHidden: false,
+  },
+
+  {
+    label: "Каталог",
+    icon: "",
+    href: "/catalog",
+    isHidden: true,
+  },
+
+  {
+    label: "Акции",
+    icon: "",
+    href: "/stocks",
+    isHidden: true,
+  },
+
+  {
+    label: "Коллекции",
+    icon: "",
+    href: "/collections",
+    isHidden: true,
+  },
+
+  {
+    label: "Доставка и оплата",
+    icon: "",
+    href: "/delivery",
+    isHidden: true,
+  },
+
+  {
+    label: "О нас",
+    icon: "",
+    href: "/about",
+    isHidden: true,
+  },
+
+  {
+    label: "",
+    icon: favorites,
+    href: "/favorites",
+    isHidden: false,
+  },
+];
+---
+
+<header id="header" class="header">
+  <div class="header__container">
+    <nav class="header__nav">
+      <button type="button" class="header__menu" onclick="menu.showModal()">
+        <MenuSvg />
+      </button>
+
+      <MobileMenu id="menu">
+        <MobileLinks />
+      </MobileMenu>
+      <ul class="header__list">
+        {
+          links.map(({ label, icon, href, isLogo, isHidden }) => (
+            <li class="header__item" hidden={isHidden}>
+              <a
+                class:list={["header__link", { header__logo: isLogo }]}
+                href={href}
+              >
+                {label || <Fragment set:html={icon} />}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <button type="button" class="header__popover">
+      <AccountSvg />
+    </button>
+    <button type="button" class="header__popover">
+      <CartSvg />
+    </button>
+  </div>
+</header>
+
+<style is:global lang="scss">
+  @use "../styles/variables" as vars;
+
+  .header {
+    block-size: 8rem;
+    align-content: center;
+    font-size: 1.8rem;
+
+    &__item[hidden] {
+      order: -1;
+    }
+
+    :where(&__container, &__nav, &__list, &__link, &__menu) {
+      display: flex;
+      align-items: center;
+    }
+
+    :where(&__container, &__list) {
+      justify-content: space-between;
+    }
+
+    :where(&__container, &__nav) {
+      gap: 2rem;
+    }
+
+    :where(&__nav, &__list, &__item[hidden]) {
+      flex-grow: 1;
+    }
+
+    :where(&__link, &__menu):hover {
+      color: vars.$clr-hover;
+    }
+
+    @media (min-width: vars.$md) {
+      block-size: 12rem;
+
+      &__menu {
+        display: none;
+      }
+
+      &__list {
+        gap: 1rem;
+        justify-content: initial;
+      }
+
+      &__item:has(&__logo) {
+        flex-grow: 1;
+        order: -2;
+      }
+
+      &__item[hidden] {
+        display: block;
+      }
+
+      &__item:last-child {
+        margin-inline-start: 1rem;
+      }
+
+      &__logo svg {
+        width: 8rem;
+        height: 8rem;
+      }
+
+      :where(&__link:not(&__logo), &__menu) svg {
+        width: 2.6rem;
+        height: 2.6rem;
+      }
+    }
+  }
+</style>
