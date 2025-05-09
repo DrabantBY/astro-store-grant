@@ -23,7 +23,7 @@ const links = [
   {
     icon: favorites,
     href: "/favorites",
-    'data-count': 2
+    "data-count": 2,
   },
 ];
 ---
@@ -55,19 +55,23 @@ const links = [
     <button type="button" class="mobile-menu__modal">
       <AccountSvg />
     </button>
-    <button type="button" class="mobile-menu__modal" onclick="cart.showModal()" data-count="2">
+    <button
+      type="button"
+      class="mobile-menu__modal"
+      onclick="cart.showModal()"
+      data-count="2"
+    >
       <CartSvg />
     </button>
   </header>
-<main class="mobile-menu__main">
-  <slot />
-</main>
+  <main class="mobile-menu__main">
+    <slot />
+  </main>
 </dialog>
 
 <style lang="scss">
   @use "../styles/variables" as vars;
   @use "../styles/mixins" as mixins;
-
 
   .mobile-menu {
     block-size: 100vh;
@@ -82,7 +86,6 @@ const links = [
       transform 0.2s,
       display 0.2s,
       overlay 0.2s;
-
     transition-behavior: allow-discrete;
 
     &::backdrop {
@@ -116,8 +119,9 @@ const links = [
       background-color: vars.$clr-black;
     }
 
-    &__link[data-count], &__modal[data-count] {
-      @include mixins.amount-badge(vars.$clr-white)
+    &__link[data-count],
+    &__modal[data-count] {
+      @include mixins.amount-badge(vars.$clr-white);
     }
 
     :where(&__link, &__modal):hover {

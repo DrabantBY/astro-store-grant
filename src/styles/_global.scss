@@ -62,8 +62,24 @@ dialog {
   border: none;
 }
 
-details summary {
-  list-style: none;
+details {
+  overflow: hidden;
+
+  summary {
+    list-style: none;
+  }
+
+  &::details-content {
+    block-size: 0;
+    transition:
+      block-size 0.2s,
+      content-visibility 0.2s;
+    transition-behavior: allow-discrete;
+  }
+
+  &[open]::details-content {
+    block-size: auto;
+  }
 }
 
 [class$="__container"] {
