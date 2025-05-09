@@ -1,4 +1,5 @@
 ---
+import { Font } from 'astro:assets';
 import Header from "@components/Header.astro";
 
 const { title = "main" } = Astro.props;
@@ -12,6 +13,7 @@ const { title = "main" } = Astro.props;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <title>Page | {title}</title>
+    <Font cssVariable="--font-montserrat" preload />
   </head>
   <body>
     <div id="root">
