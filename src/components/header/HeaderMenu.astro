@@ -1,0 +1,85 @@
+---
+const { hidden, label, list, href, pathname, popover } = Astro.props;
+---
+
+<li class="header__item" hidden={hidden}>
+  <button
+    class:list={["header__anchor", { active: pathname === href }]}
+    type="button"
+    popovertarget={popover}
+    style={{ "anchor-name": `--${popover}` }}
+    onmouseenter=`${popover}.showPopover()`
+  >
+    {label}
+  </button>
+</li>
+
+<ul
+  class="header__menu"
+  id={popover}
+  style={{ "position-anchor": `--${popover}` }}
+  popover
+  onmouseleave="this.hidePopover()"
+>
+  {
+    list.map(({ label, href }) => (
+      <li class="header__item">
+        <a
+          class:list={["header__link", { active: pathname === href }]}
+          href={href}
+          target="_blank"
+        >
+          {label}
+        </a>
+      </li>
+    ))
+  }
+</ul>
+
+<style lang="scss">
+  @use "../../styles/variables" as vars;
+  @use "../../styles/mixins" as mixins;
+
+  .header {
+    &__menu {
+      padding-inline: 1.6rem;
+      padding-block: 1.6rem;
+      box-shadow: 0.5rem 0.5rem 2.4rem rgba(0, 0, 0, 0.05);
+      inset-block-start: calc(anchor(bottom) + 3.2rem);
+      justify-self: anchor-center;
+    }
+
+    &__item {
+      & + & {
+        margin-block-start: 1.6rem;
+      }
+
+      &[hidden] {
+        flex-grow: 1;
+        order: -2;
+        text-wrap: balance;
+      }
+    }
+
+    &__link,
+    &__anchor {
+      display: flex;
+      align-items: center;
+
+      &:hover {
+        color: vars.$clr-hover;
+      }
+
+      &.active {
+        color: vars.$clr-active;
+        font-weight: 700;
+      }
+    }
+
+    @media (min-width: vars.$md) {
+      &__item[hidden] {
+        display: block;
+      }
+    }
+  }
+</style>

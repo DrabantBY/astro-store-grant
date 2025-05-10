@@ -1,53 +1,27 @@
 ---
-import CloseBtnLayout from "@layouts/CloseBtnLayout.astro";
+import CloseLayout from "@layouts/CloseLayout.astro";
+import HeaderLink from "./HeaderLink.astro";
+
 import AccountSvg from "@svg/account.svg";
 import CartSvg from "@svg/cart.svg";
 
-import logo from "@svg/logo.svg?raw";
-import search from "@svg/search.svg?raw";
-import favorites from "@svg/favorites.svg?raw";
+import { mainLinks } from "@data/mainLinks.js";
 
 const { id } = Astro.props;
-
-const links = [
-  {
-    icon: search,
-    href: "/search",
-  },
-
-  {
-    icon: logo,
-    href: "/",
-  },
-
-  {
-    icon: favorites,
-    href: "/favorites",
-    "data-count": 2,
-  },
-];
+const { pathname } = new URL(Astro.request.url);
 ---
 
 <dialog id={id} class="mobile-menu">
   <header class="mobile-menu__header">
-    <CloseBtnLayout onclick="menu.close()" />
+    <CloseLayout onclick="menu.close()" />
     <nav class="mobile-menu__nav">
       <ul class="mobile-menu__list">
         {
-          links.map(({ icon, ...other }) => (
-            <li class="mobile-menu__item">
-              <a
-                class:list={[
-                  "mobile-menu__link",
-                  { "mobile-menu__logo": other.href === "/" },
-                ]}
-                target="_blank"
-                {...other}
-              >
-                <Fragment set:html={icon} />
-              </a>
-            </li>
-          ))
+          mainLinks
+            .filter(({ icon }) => Boolean(icon))
+            .map((link) => (
+              <HeaderLink {...link} active={link.href === pathname} />
+            ))
         }
       </ul>
     </nav>
@@ -70,8 +44,8 @@ const links = [
 </dialog>
 
 <style lang="scss">
-  @use "../styles/variables" as vars;
-  @use "../styles/mixins" as mixins;
+  @use "../../styles/variables" as vars;
+  @use "../../styles/mixins" as mixins;
 
   .mobile-menu {
     block-size: 100vh;
@@ -111,28 +85,25 @@ const links = [
       justify-content: space-between;
     }
 
-    &__link[data-count]::after {
-      background-color: vars.$clr-active;
-    }
+    &__modal {
+      &:hover {
+        color: vars.$clr-disable;
+      }
 
-    &__modal[data-count]::after {
-      background-color: vars.$clr-black;
-    }
+      &[data-count] {
+        @include mixins.amount-badge(vars.$clr-white);
 
-    &__link[data-count],
-    &__modal[data-count] {
-      @include mixins.amount-badge(vars.$clr-white);
-    }
-
-    :where(&__link, &__modal):hover {
-      color: vars.$clr-disable;
+        &::after {
+          background-color: vars.$clr-black;
+        }
+      }
     }
 
     :where(&__nav, &__list) {
       flex-grow: 1;
     }
 
-    :where(&__list, &__link, &__modal) {
+    :where(&__list, &__modal) {
       display: flex;
       align-items: center;
     }

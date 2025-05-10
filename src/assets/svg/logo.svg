@@ -1,6 +1,6 @@
 <svg width="50" height="50" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
     <path id="circle" d="M10,50a40,40 0 1,1 80,0a40,40 0 1,1 -80,0" fill="none"/>
-    <text font-size="inherit" font-weight="bold" fill="currentColor" text-anchor="middle">
+    <text font-size="16" font-weight="inherit" fill="currentColor" text-anchor="middle">
         <textPath href="#circle" startOffset="50%" textLength="244" dominant-baseline="middle">
             GRANT JEWELRY STORAGE
         </textPath>

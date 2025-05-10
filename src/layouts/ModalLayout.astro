@@ -1,6 +1,6 @@
 ---
-import CloseBtnLayout from "./CloseBtnLayout.astro";
-import TextLinkLayout from "./TextLinkLayout.astro";
+import CloseLayout from "./CloseLayout.astro";
+import LinkLayout from "./LinkLayout.astro";
 
 const { id, title, link } = Astro.props;
 ---
@@ -10,7 +10,7 @@ const { id, title, link } = Astro.props;
     <h2 class="modal__title">
       {title}
     </h2>
-    <CloseBtnLayout onclick=`${id}.close()` />
+    <CloseLayout onclick=`${id}.close()` />
   </header>
 
   <main class="modal__main">
@@ -18,7 +18,7 @@ const { id, title, link } = Astro.props;
   </main>
 
   <footer class="modal__footer">
-    <TextLinkLayout {...link} />
+    <LinkLayout {...link} />
   </footer>
 </dialog>
 

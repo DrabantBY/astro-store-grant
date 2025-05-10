@@ -54,6 +54,8 @@ ol {
 }
 
 button {
+  font-family: inherit;
+  font-weight: inherit;
   font-size: inherit;
   color: inherit;
   border: none;
@@ -84,6 +86,10 @@ details {
   &[open]::details-content {
     block-size: auto;
   }
+}
+
+[popover] {
+  border: none;
 }
 
 [class$="__container"] {

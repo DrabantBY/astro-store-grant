@@ -1,0 +1,128 @@
+---
+import MobileMenu from "./MobileMenu.astro";
+import MobileLinks from "./MobileLinks.astro";
+import HeaderLink from "./HeaderLink.astro";
+import HeaderMenu from "./HeaderMenu.astro";
+import ModalLayout from "@layouts/ModalLayout.astro";
+
+import MenuSvg from "@svg/menu.svg";
+import AccountSvg from "@svg/account.svg";
+import CartSvg from "@svg/cart.svg";
+
+import { mainLinks } from "@data/mainLinks.js";
+
+const { pathname } = new URL(Astro.request.url);
+---
+
+<header id="header" class="header">
+  <div class="header__container">
+    <nav class="header__nav">
+      <button type="button" class="header__modal" onclick="menu.showModal()">
+        <MenuSvg />
+      </button>
+
+      <MobileMenu id="menu">
+        <MobileLinks />
+      </MobileMenu>
+      <ul class="header__list">
+        {
+          mainLinks.map((link) => {
+            if (link.list) {
+              return <HeaderMenu {...link} pathname={pathname}  popover={link.href.slice(1)} />;
+            }
+
+            return <HeaderLink {...link} active={link.href === pathname} />;
+          })
+        }
+      </ul>
+    </nav>
+
+    <button type="button" class="header__modal">
+      <AccountSvg />
+    </button>
+
+    <button
+      type="button"
+      class="header__modal"
+      data-count="2"
+      onclick="cart.showModal()"
+    >
+      <CartSvg />
+    </button>
+    <ModalLayout
+      id="cart"
+      title="ваша корзина пока пуста"
+      link={{ label: "выбрать товары", href: "#" }}
+    >
+      Корзина ждет, что ее наполнят. Желаем приятных покупок!
+    </ModalLayout>
+  </div>
+</header>
+
+<style is:global lang="scss">
+  @use "../../styles/variables" as vars;
+  @use "../../styles/mixins" as mixins;
+
+  .header {
+    block-size: 8rem;
+    align-content: center;
+    font-size: 1.8rem;
+    font-weight: 500;
+
+    &__modal {
+      &:hover {
+        color: vars.$clr-hover;
+      }
+
+      &[data-count] {
+        @include mixins.amount-badge(vars.$clr-white);
+
+        &::after {
+          background-color: vars.$clr-black;
+        }
+      }
+    }
+
+    :where(&__container, &__nav, &__list, &__modal) {
+      display: flex;
+      align-items: center;
+    }
+
+    :where(&__container, &__list) {
+      justify-content: space-between;
+    }
+
+    :where(&__container, &__nav) {
+      gap: 2rem;
+    }
+
+    :where(&__nav, &__list) {
+      flex-grow: 1;
+    }
+
+    @media (min-width: vars.$md) {
+      block-size: 12rem;
+
+      &__modal {
+        &:first-child {
+          display: none;
+        }
+
+        &[data-count]::after {
+          inset-inline-end: -3px;
+          inset-block-start: -6px;
+        }
+
+        svg {
+          width: 2.6rem;
+          height: 2.6rem;
+        }
+      }
+
+      &__list {
+        gap: 1rem;
+        justify-content: initial;
+      }
+    }
+  }
+</style>

@@ -1,0 +1,81 @@
+---
+const { hidden, label, icon, active, ...other } = Astro.props;
+---
+
+<li class="header__item" hidden={hidden}>
+  <a
+    class:list={["header__link", { logo: other.href === "/" }, { active }]}
+    target="_blank"
+    {...other}
+  >
+    {label || <Fragment set:html={icon} />}
+  </a>
+</li>
+
+<style lang="scss">
+  @use "../../styles/variables" as vars;
+  @use "../../styles/mixins" as mixins;
+
+  .header {
+    &__item[hidden] {
+      flex-grow: 1;
+      order: -1;
+      text-wrap: balance;
+    }
+
+    &__link {
+      display: flex;
+      align-items: center;
+
+      &:hover {
+        color: vars.$clr-hover;
+      }
+
+      &.active {
+        color: vars.$clr-active;
+        font-weight: 700;
+      }
+
+      &[data-count] {
+        @include mixins.amount-badge(vars.$clr-white);
+        &::after {
+          background-color: vars.$clr-active;
+        }
+      }
+    }
+
+    @media (min-width: vars.$md) {
+      &__item {
+        &:has(.logo) {
+          flex-grow: 1;
+          order: -2;
+        }
+
+        &[hidden] {
+          display: block;
+        }
+
+        &:last-child {
+          margin-inline-start: 1rem;
+        }
+      }
+
+      &__link {
+        &:not(.logo) > :global(svg) {
+          width: 2.6rem;
+          height: 2.6rem;
+        }
+
+        &[data-count]::after {
+          inset-inline-end: -3px;
+          inset-block-start: -6px;
+        }
+
+        &.logo > :global(svg) {
+          width: 8rem;
+          height: 8rem;
+        }
+      }
+    }
+  }
+</style>

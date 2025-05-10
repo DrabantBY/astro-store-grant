@@ -1,0 +1,108 @@
+---
+import ArrowSvg from "@svg/arrow.svg";
+
+import { mainLinks } from "@data/mainLinks.js";
+
+const { pathname } = new URL(Astro.request.url);
+---
+
+<nav class="mobile-menu__nav">
+  <ul class="mobile-menu__list">
+    {
+      mainLinks
+        .filter(({ hidden }) => Boolean(hidden))
+        .map(({ label, href, list }) => {
+          if (!list) {
+            return (
+              <li class="mobile-menu__item">
+                <a class="mobile-menu__link" href={href} target="_blank">
+                  {label}
+                </a>
+              </li>
+            );
+          }
+
+          return (
+            <details>
+              <summary class="mobile-menu__title">
+                {label}
+                <ArrowSvg />
+              </summary>
+              <ul class="mobile-menu__sublist">
+                {list.map(({ label, href }) => (
+                  <li class="mobile-menu__item">
+                    <a
+                      class:list={[
+                        "mobile-menu__link",
+                        { active: href === pathname },
+                      ]}
+                      href={href}
+                      target="_blank"
+                    >
+                      {label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </details>
+          );
+        })
+    }
+  </ul>
+</nav>
+
+<style lang="scss">
+  @use "../../styles/variables" as vars;
+
+  .mobile-menu {
+    &__sublist {
+      margin-inline-start: 4rem;
+    }
+
+    &__link {
+      display: block;
+
+      &.active {
+        color: vars.$clr-active;
+        font-weight: 700;
+      }
+    }
+
+    &__link,
+    &__title {
+      padding-block: 1.5rem;
+      border-bottom: 1px solid currentColor;
+
+      &:hover:not(.active) {
+        color: vars.$clr-disable;
+      }
+    }
+
+    &__title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+
+      svg {
+        transform: rotate(-90deg);
+        transition: transform 0.1s linear;
+      }
+    }
+
+    details[open] &__title {
+      text-decoration: underline;
+      text-underline-offset: 1.8rem;
+      text-decoration-thickness: 1px;
+      border-bottom-color: transparent;
+
+      &:hover {
+        color: vars.$clr-white;
+      }
+
+      svg {
+        transform: rotate(0);
+      }
+    }
+  }
+</style>
